@@ -32,7 +32,8 @@ export class LoginComponent implements AfterViewInit {
     
   }
 
-
+/* La función googleInit es llamada al iniciar la aplicación y tiene como objetivo inicializar la API de
+ autenticación de Google y renderizar un botón de inicio de sesión personalizado. */
   googleInit(){
     google.accounts.id.initialize({
       client_id: "357063670705-5bnv709p6tdgd1oiho3q2fon8v1vgm6j.apps.googleusercontent.com",
@@ -50,7 +51,7 @@ export class LoginComponent implements AfterViewInit {
       console.log("Encoded JWT ID token: " + response.credential);
         this.usuarioService.loginGoogle( response.credential )
             .subscribe( resp => {
-              //console.log({ login: resp })
+            
               this.router.navigateByUrl('/');
             })
   }
