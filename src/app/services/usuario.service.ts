@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
 import { RegisterForm } from '../interfaces/register-form.register';
 import { LoginForm } from '../interfaces/login-form.interface';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, delay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model'
+import { cargarUsuario } from '../interfaces/cargar-usuario.interface'
 
 declare const google: any;
 
-const base_url = environment.base_url
+const base_url = environment.base_url;
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class UsuarioService {
 
   logout(){
     localStorage.removeItem('token');
-    google.accounts.id.revoke('smoralespincheira@gmail.com', () => {
+    google.accounts.id.revoke('', () => {
       this.router.navigateByUrl('/login');
     })
     
@@ -35,6 +36,14 @@ export class UsuarioService {
 
   get uid():string {
     return this.usuario.uid || '';
+  }
+
+  get headers() {
+    return { 
+      headers: {
+      'x-token': this.token //ESTE ES EL GET TOKEN
+      }
+    }
   }
 
   validarToken(): Observable<boolean> {
@@ -71,17 +80,14 @@ export class UsuarioService {
   }
 
   actualizarPerfil(  data: { email: string, nombre: string, role: string } ){
-
+    
     data = {
       ...data,
       role: this.usuario.role
-    }
+    } 
 
-    return this.http.put(`${ base_url }/usuarios/${this.uid}`, data, {
-      headers: {
-        'x-token': this.token //ESTE ES EL GET TOKEN
-      }
-    })
+    return this.http.put(`${ base_url }/usuarios/${this.uid}`, data, this.headers) 
+     
   }
 
   login( formData: LoginForm ){
@@ -102,6 +108,39 @@ export class UsuarioService {
           localStorage.setItem('token', resp.token)
         })
       )
+  }
+
+  cargarUsuarios( desde: number = 0 ) {
+    //localhost:3000/api/usuarios?desde=0
+    const url = `${ base_url }/usuarios?desde=${ desde }`;
+    return this.http.get<cargarUsuario>( url, this.headers)
+        .pipe(
+           delay(200),
+          map( resp => { //EL MAP ES PARA TRANSFORMAR EL TIPO JSON DE UNA SOLICITUD HTTP AL OBJETO SOLICITADO  EN ESTE CASO OBJETO TIPO USUARIO
+            const usuarios: Usuario[] = [];
+            resp.usuarios.forEach(user => {
+              usuarios.push(new Usuario(user.nombre, user.email, '', user.img, user.google, user.role, user.uid ));
+            });
+            /* 
+                const usuarios = resp.usuarios.map(
+            user => new Usuario(user.nombre, user.email, '', user.img, user.google, user.role, user.uid )
+            */
+            return {
+              total: resp.total,
+              usuarios
+            }
+          })
+          
+        )
+  }
+
+  eliminarUsuario( usuario: Usuario ){
+    const url = `${ base_url }/usuarios/${ usuario.uid }`; //SE NECESITA EL UID DEL USUARIO PARA BORRAR
+    return this.http.delete( url, this.headers );
+  }
+
+  guardarUsuario( usuario: Usuario ){
+    return this.http.put(`${ base_url }/usuarios/${ usuario.uid }`, usuario, this.headers) 
   }
 
 }
