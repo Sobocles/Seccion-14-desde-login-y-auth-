@@ -15,14 +15,14 @@ export class Usuario {
         public uid?: string,
      ) {}
 
-     get imagenUrl(){
+     get imagenUrl(){ //UNA FUNCION QUE RETORNA LA DIRECCION DE LA IMAGEN DEL USUARIO EN BASE A SI ESTA EXISTE O NO (SI EL USUARIO TIENE UNA IMAGEN O NO) PARA PODER MOSTRARLA EN EL SIDEBAR, EN EL HEADERS ETC
 
         if( !this.img ){
-            return `${ base_url }/upload/usuarios/no-image`;
-        } else if( this.img.includes('https') ){
+            return `${ base_url }/upload/usuarios/no-image`; //SI NO TIENE IMAGEN
+        } else if( this.img.includes('https') ){ //SI TIENE UNA IMAGEN DE GOOGLE
             return this.img;
         } else if ( this.img ) {
-            return `${ base_url }/upload/usuarios/${ this.img }`;
+            return `${ base_url }/upload/usuarios/${ this.img }`; //SI TIENE UNA IMAGEN
         } else {
             return `${ base_url }/upload/usuarios/no-image`;
         }

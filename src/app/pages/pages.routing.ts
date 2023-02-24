@@ -11,9 +11,13 @@ import { RxjsComponent } from './rxjs/rxjs.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { PerfilComponent } from './perfil/perfil.component';
 import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component';
+import { MedicosComponent } from './mantenimientos/medicos/medicos.component';
+import { MedicoComponent } from './mantenimientos/medicos/medico.component';
+import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
 
 const routes: Routes = [
     { 
+        
         path: 'dashboard', 
         component: PagesComponent,
         canActivate: [ AuthGuard ], //TODAS ESTAS RUTAS ESTAN PROTEGIDAS, SI NO ESTA AUTENTICADO NO DEBERIA VER NINGUNA DE ESTAS
@@ -26,7 +30,10 @@ const routes: Routes = [
             { path: 'rxjs', component: RxjsComponent, data: { titulo: 'RxJs'} },
             { path: 'perfil', component: PerfilComponent, data: {titulo: 'Perfil de usuario' }},
             //Mantenimientos
-            { path: 'usuarios', component: UsuariosComponent, data: {titulo: 'Usuario de la aplicacion'}}
+            { path: 'usuarios', component: UsuariosComponent, data: {titulo: 'Mantenimiento de usuarios'}},
+            { path: 'hospitales', component: HospitalesComponent, data: {titulo: 'Mantenimiento de hospitales'}},
+            { path: 'medicos', component: MedicosComponent, data: {titulo: 'Mantenimiento de Medicos'}},
+            { path: 'medico/:id', component: MedicoComponent, data: {titulo: 'Mantenimiento de Medicos'}},
         ]
     },
 ];

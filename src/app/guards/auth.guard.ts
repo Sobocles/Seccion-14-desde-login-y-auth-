@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
 
       return this.usuarioService.validarToken()
         .pipe(
-          tap( estaAutenticado =>  {
+          tap( estaAutenticado =>  { //EL VALOR BOOLEANDO OBTENIDO EN LA RESPUESTA ANTERIOR DETERMINA SI ESTA AUTENTICADO O NO, SI NO LO ESTA SE REDIRECCIONA AL USUARIO AL LOGIN (SE LO SACA DE LA APLICACION)
             if ( !estaAutenticado ) {
               this.router.navigateByUrl('/login');
             }

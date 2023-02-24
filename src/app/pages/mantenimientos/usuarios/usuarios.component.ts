@@ -73,8 +73,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       return this.usuarios = this.usuarioTemp;
     }
     this.busquedasService.buscar('usuarios', termino )
-      .subscribe( resultados => 
-        this.usuarios = resultados ); //SE IGUALA A USUARIOS YA QUE USUARIO ESTA EN EL USUARIOS.COMPONENT.HTML EN FORMA DE {{usuario.nombre}} etc Y RESULTADOS TRAE LOS RESULTADOS DE LA BUSQUEDA DEACUERDO AL TERMINO DE LA TECLA QUE SE PRESIONO
+      .subscribe( (resp: Usuario[]) =>    //IMPORTANTE EN ESTA RESPUESTE PUEDE VENIR UN USUARIO O HOSPITAL DEPENDIENDO DEL TIPO EN EL SWITCH DE BUSQUEDASSERVICE POR LO TANTO HAY QUE ESPECIFICAR QUE ESTAMOS SEGUROS QUE VENDRA UN USUARIO POR EL TIPO
+        this.usuarios = resp );           //SE IGUALA A USUARIOS YA QUE USUARIO ESTA EN EL USUARIOS.COMPONENT.HTML EN FORMA DE {{usuario.nombre}} etc Y RESULTADOS TRAE LOS RESULTADOS DE LA BUSQUEDA DEACUERDO AL TERMINO DE LA TECLA QUE SE PRESIONO
   }
 
   eliminarUsuario( usuario:Usuario ) {

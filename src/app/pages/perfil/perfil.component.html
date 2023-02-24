@@ -8,7 +8,7 @@
                         [formGroup]="perfilForm"
                         (ngSubmit)="actualizarPerfil()">
                     <div class="form-group">
-                        <label for="exampleInputuname">User Name</label>
+                        <label for="exampleInputuname">Nombre de usuario</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="ti-user"></i></div>
                             <input type="text" class="form-control"
@@ -47,12 +47,12 @@
                 <h6 class="card-subtitle">Imagen del usuario</h6>
 
                 <div class="text-center">
-                    <img *ngIf="!imgTemp" [src]="usuario.imagenUrl" class="img-avatar">
-                    <img *ngIf="imgTemp" [src]="imgTemp" class="img-avatar">
+                    <img *ngIf="!imgTemp" [src]="usuario.imagenUrl" class="img-avatar"> <!--SI NO EXISTE LA IMAGEN TEMPORAL UTILIZE LA DEL USUARIO (LA QUE YA TENIA)-->
+                    <img *ngIf="imgTemp" [src]="imgTemp" class="img-avatar"> <!--SI EXISTE REEMPPLACELA POR IMAGEN TEMPORAL (ES LA IMAGEN QUE SE VERA LA EN LA PANTALLA CUANDO SE GUARDE)-->
                 </div>
             
                 <input type="file"
-                        (change)="cambiarImagen($event.target.files[0])">
+                        (change)="cambiarImagen($event.target.files[0])"> <!--EL PRIMER ELEMENTO ES LA IMAGEN POR ESO FILES[0]-->
                 <br> 
                 <!--[disabled]="!imagenSubir" SE DESABILITA EL BOTON SI NO HAY NINGUNA IMAGEN  A SUBIR-->
                 <button type="button"

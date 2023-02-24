@@ -13,7 +13,8 @@ export class HeaderComponent{
   usuario: Usuario;
 
   constructor( private usuarioService: UsuarioService) { 
-    this.usuario =  this.usuarioService.usuario
+    this.usuario =  this.usuarioService.usuario;
+    //console.log(this.usuario)
   }
 
   logout(){

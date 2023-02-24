@@ -19,7 +19,7 @@ export class LoginComponent implements AfterViewInit {
   public formSubmitted = false;
 
   public loginForm = this.fb.group({
-    email: [localStorage.getItem('email') || '', [Validators.required, Validators.required]],
+    email: [localStorage.getItem('email') || '', [Validators.required, Validators.required]], //MAS ABAJO SI EL USUARIO LE HIZO CLICK A REMENBERME Y ESTE ESTA EN TRUE SE GUARDA EN EL LOCALSTORAGE.... YA EN EL LOCAL SE ALMACENA EN EL INPUT PARA QUE SIEMPRE ESTE EL EMAIL EN EL INPUT
     password: ['', Validators.required ],
     remember: [false],
   })
@@ -58,12 +58,12 @@ export class LoginComponent implements AfterViewInit {
 
   login(){
 
-    this.usuarioService.login( this.loginForm.value )
+    this.usuarioService.login( this.loginForm.value ) //SE ENVIAN LOS DATOS INGRESADOS POR EL USUARIO EMAIL, PASSWORD Y REMENBER
         .subscribe( resp => {
-          if( this.loginForm.get('remember').value ){
-            localStorage.setItem('email', this.loginForm.get('email').value);
+          if( this.loginForm.get('remember').value ){ //SI EL USUARIO LE HACE CLICK A REMENBERME (REMENBERME = TRUE)
+            localStorage.setItem('email', this.loginForm.get('email').value); //SE GUARDA EL EMAIL EN EL LOCAL STORAGE CON EL NOMBRE EMAIL
           } else {
-            localStorage.removeItem('email');
+            localStorage.removeItem('email'); //SI NO LO LE HACE CLICK SE REMUEVE DEL LOCALSTORAGE
           }
 
         // Navegar al Dashboard
