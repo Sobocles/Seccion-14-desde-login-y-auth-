@@ -40,6 +40,12 @@ export class BusquedasService {
     return resultados;
   }
 
+  busquedaGlobal( termino: string ){
+    const url = `${ this.base_url }/todo/${ termino }`;
+    return this.http.get( url, this.headers ) //AQUI HAY QUE DECIRLE QUE SE RECIBE UN ARREGLO PORQUE LLEGA UN ARREGLO DEL FRONTEND
+    
+  }
+
   buscar(
     tipo: 'usuarios' |'medicos' | 'hospitales',
     termino: string

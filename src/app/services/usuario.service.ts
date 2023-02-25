@@ -23,16 +23,14 @@ export class UsuarioService {
 
   constructor( private http: HttpClient, private router: Router ) { }
 
-  logout(){
-    localStorage.removeItem('token');
-    google.accounts.id.revoke('', () => {
-      this.router.navigateByUrl('/login');
-    })
-    
-  }
+ 
 
   get token(): string {
     return localStorage.getItem('token') || '';
+  }
+
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE' {
+    return this.usuario.role;
   }
 
   get uid():string {
@@ -47,7 +45,22 @@ export class UsuarioService {
     }
   }
 
+  guardarLocalStorage( token: string, menu: any ) {
 
+    localStorage.setItem('token', token );
+    localStorage.setItem('menu', JSON.stringify(menu) );
+
+  }
+
+  logout(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('menu');
+    //TODO: Borrar menu
+    google.accounts.id.revoke('', () => {
+      this.router.navigateByUrl('/login');
+    })
+    
+  }
   //CUANDO ME LOGEO O REGISTRO SIEMPRE VOY A PASAR POR ESTA FUNCION YA QUE GUARDS TIENE QUE REVISAR SI EL 
   //TOKEN ES VALIDO O NO INVOCANDO A ESTA FUNCION PARA REDIRECIONAR AL DASHBOARD EN CASO DE SER VALIDO POR LO TANTO SIEMPRE QUE ME
   //ANTES DE DAR LA RESPUESTA GUARDS CREARE UNA NUEVA INSTANCIA DE USUARIO, OBTENIENDO TODOS SUS CAMPOS
@@ -65,7 +78,8 @@ export class UsuarioService {
       
         this.usuario = new Usuario( nombre, email, '', img, google, role, uid ); //Si la solicitud tiene éxito, el método map transforma la respuesta en un objeto de usuario y lo asigna a la propiedad usuario de la clase que contiene este método
         console.log(this.usuario);
-        localStorage.setItem('token', resp.token ); // Luego, el NUEVO token se almacena en el almacenamiento local (localStorage.setItem('token', resp.token )) y la función devuelve un valor booleano true.
+        this.guardarLocalStorage( resp.token, resp.menu )  // Luego, el NUEVO token se almacena en el almacenamiento local (localStorage.setItem('token', resp.token )) y la función devuelve un valor booleano true.
+                                                     
         return true
       }),
      
@@ -80,7 +94,8 @@ export class UsuarioService {
     return this.http.post(`${base_url}/usuarios`,formData )
         .pipe( //El operador pipe() es una función que permite encadenar una serie de operaciones sobre un flujo de datos (en este caso, los datos devueltos por la solicitud HTTP)
             tap( (resp: any) => { //el tap() permite interceptar esos datos para realizar una acción específica (en este caso, almacenar el token en el localStorage).
-              localStorage.setItem('token', resp.token ) //En este caso específico, la operación tap() se utiliza para almacenar el valor del token en el localStorage del navegador. El token se obtiene a partir de la respuesta (resp) que se recibe de la solicitud HTTP y se almacena con la llave 'token'.
+              this.guardarLocalStorage( resp.token, resp.menu ) //En este caso específico, la operación tap() se utiliza para almacenar el valor del token en el localStorage del navegador. El token se obtiene a partir de la respuesta (resp) que se recibe de la solicitud HTTP y se almacena con la llave 'token'.
+                
             })
         )
   }
@@ -105,9 +120,10 @@ export class UsuarioService {
   
   login( formData: LoginForm ){ //formData es un objeto que tiene el tipo LoginForm definido en la interfaz y donde vienen el email y el password
     return this.http.post(`${base_url}/login`,formData ) // IMPORTANTE!! EN ESTE CASO LA RESPUESTA SERIA EL OK:TRUE Y EL TOKEN
-        .pipe(                                           //El operador pipe() es una función que permite encadenar una serie de operaciones sobre un flujo de datos (en este caso, los datos devueltos por la solicitud HTTP)
+        .pipe(                                          //El operador pipe() es una función que permite encadenar una serie de operaciones sobre un flujo de datos (en este caso, los datos devueltos por la solicitud HTTP)
           tap( (resp: any) => {                          //el tap() permite interceptar esos datos para realizar una acción específica (en este caso, almacenar el token en el localStorage).
-            localStorage.setItem('token', resp.token )   //La operación tap() se utiliza para almacenar el valor del token en el localStorage del navegador. El token se obtiene a partir de la respuesta (resp) que se recibe de la solicitud HTTP y se almacena con la llave 'token'.
+            this.guardarLocalStorage( resp.token, resp.menu );   //La operación tap() se utiliza para almacenar el valor del token en el localStorage del navegador. El token se obtiene a partir de la respuesta (resp) que se recibe de la solicitud HTTP y se almacena con la llave 'token'.
+            
           })
         )
   }

@@ -44,7 +44,7 @@ export class MedicoService {
     const url = `${ base_url }/medicos/${ id }`;
     return this.http.get( url, this.headers )
           .pipe(
-              map( (resp: {ok: boolean, medico: Medico }) => {
+              map( (resp: {ok: boolean, medico: Medico }) => { //IMPORTANTE!! QUE {ok: boolean, medico: Medico } DEBEN ESTAR EXACTAMENTE ESCRITOS DE COMO VIENEN EN LA RESPUESTA DEL BACKEND si pongo medicos con unas al final puede dar un undefind cuando quiera hacerle console log a la respuesta al momento de subscribir a este metodo de este servicio
                 console.log(resp);
                 return resp.medico;
               })
